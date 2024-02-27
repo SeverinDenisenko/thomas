@@ -21,9 +21,6 @@ endif()
 
 set(UNIVERSAL_COMPILE_OPTIONS ${UNIVERSAL_COMPILE_WARNINGS} ${UNIVERSAL_COMPILE_FEATURES} ${UNIVERSAL_COMPILE_SUPPRESSIONS})
 
-# Switch for "Release" for final build
-set(CMAKE_BUILD_TYPE "Debug")
-
 if (CMAKE_BUILD_TYPE EQUAL "Release")
     add_compile_options(${UNIVERSAL_COMPILE_OPTIONS} "-O3" "-flto")
     add_link_options("-flto")
