@@ -23,18 +23,33 @@ void print(const array<real>& a)
 template <typename real>
 void print(array<real>& a, array<real>& b, array<real>& c, array<real>& d, array<real>& x, array<real>& res)
 {
-    std::cout << "a:      ";
+    std::cout << "a:        ";
     print(a);
-    std::cout << "b:      ";
+    std::cout << "b:        ";
     print(b);
-    std::cout << "c:      ";
+    std::cout << "c:        ";
     print(c);
-    std::cout << "d:      ";
+    std::cout << "d:        ";
     print(d);
-    std::cout << "got:    ";
-    print(x);
-    std::cout << "actual: ";
+    std::cout << "expected: ";
     print(res);
+    std::cout << "actual:   ";
+    print(x);
+}
+
+template <typename real>
+void print(array<real>& a, array<real>& b, array<real>& c, array<real>& d, bool good)
+{
+    std::cout << "a:        ";
+    print(a);
+    std::cout << "b:        ";
+    print(b);
+    std::cout << "c:        ";
+    print(c);
+    std::cout << "d:        ";
+    print(d);
+    std::cout << "expected: " << "BAD" << std::endl;
+    std::cout << "actual:   " << (good ? "GOOD" : "BAD") << std::endl;
 }
 
 template <typename real>
@@ -43,7 +58,8 @@ void test(array<real>& a, array<real>& b, array<real>& c, array<real>& x, array<
     tridiagonal_matrix_solver<real> solver(x.size());
 
     array<real> d = x;
-    solver.solve_fast(x, a, b, c);
+    array<real> cc = c;
+    solver.solve_fast(x, a, b, cc);
     print(a, b, c, d, x, res);
 
     assert(solver.good());
@@ -52,13 +68,14 @@ void test(array<real>& a, array<real>& b, array<real>& c, array<real>& x, array<
 }
 
 template <typename real>
-void test_bad(array<real>& a, array<real>& b, array<real>& c, array<real>& x, array<real>& res)
+void test_bad(array<real>& a, array<real>& b, array<real>& c, array<real>& x)
 {
     tridiagonal_matrix_solver<real> solver(x.size());
 
     array<real> d = x;
-    solver.solve_fast(x, a, b, c);
-    print(a, b, c, d, x, res);
+    array<real> cc = c;
+    solver.solve_fast(x, a, b, cc);
+    print(a, b, c, d, solver.good());
 
     assert(!solver.good());
     std::cout << "PASS" << std::endl << std::endl;
@@ -70,7 +87,8 @@ void test_round(array<real>& a, array<real>& b, array<real>& c, array<real>& x, 
     tridiagonal_matrix_solver<real> solver(x.size());
 
     array<real> d = x;
-    solver.solve_fast(x, a, b, c);
+    array<real> cc = c;
+    solver.solve_fast(x, a, b, cc);
     print(a, b, c, d, x, res);
 
     for (size_t i = 0; i < x.size(); ++i) {
@@ -90,9 +108,8 @@ void test_first()
     array<double> b   = {+0.785, -4.444, -6.681};
     array<double> c   = {+5.347, +6.681, +0.000};
     array<double> x   = {+9.122, +5.565, +3.557};
-    array<double> res = {double(NAN), double(NAN), double(NAN)};
 
-    test_bad(a, b, c, x, res);
+    test_bad(a, b, c, x);
 }
 
 void test_second()
@@ -191,9 +208,8 @@ void test_zero()
     array<float> b   = {0.0f, 0.0f, 0.0f};
     array<float> c   = {0.0f, 0.0f, 0.0f};
     array<float> x   = {1.0f, 2.0f, 3.0f};
-    array<float> res = {float(NAN), float(NAN), float(NAN)};
 
-    test_bad(a, b, c, x, res);
+    test_bad(a, b, c, x);
 }
 
 void test_small()
@@ -205,6 +221,48 @@ void test_small()
     array<double> res = {-15.0, 55.0 / 6.0, -5.0 / 3.0};
 
     test(a, b, c, x, res);
+}
+
+void test_strange()
+{
+    array<double> a   = {0.000, 1.000, 1.000};
+    array<double> b   = {0.000, 1.000, 0.000};
+    array<double> c   = {1.000, 1.000, 0.000};
+    array<double> x   = {1.000, 1.000, 1.000};
+
+    test_bad(a, b, c, x);
+}
+
+void test_strangest()
+{
+    array<double> a   = {0.000, 1.000, 1.000};
+    array<double> b   = {0.000, 0.000, 0.000};
+    array<double> c   = {1.000, 1.000, 0.000};
+    array<double> x   = {1.000, 1.000, 1.000};
+
+    test_bad(a, b, c, x);
+}
+
+void test_lower()
+{
+    array<double> a   = {0.000, 0.000, 0.000};
+    array<double> b   = {1.000, 1.000, 1.000};
+    array<double> c   = {1.000, 1.000, 0.000};
+    array<double> x   = {1.000, 1.000, 1.000};
+    array<double> res = {1.000, 0.000, 1.000};
+
+    test(a, b, c, x, res);
+}
+
+void test_nondominant()
+{
+    array<double> a   = {0.000, 10.00, 10.00};
+    array<double> b   = {0.001, 0.001, 0.001};
+    array<double> c   = {-1.00, -1.00, 0.000};
+    array<double> x   = {1.000, 1.000, 1.000};
+    array<double> res = {550.050, -0.450, 5499.500};
+
+    test_round(a, b, c, x, res);
 }
 
 int main()
@@ -225,6 +283,14 @@ int main()
     test_zero();
     std::cout << "TEST Small:" << std::endl;
     test_small();
+    std::cout << "TEST Strange:" << std::endl;
+    test_strange();
+    std::cout << "TEST Strangest:" << std::endl;
+    test_strangest();
+    std::cout << "TEST Lower:" << std::endl;
+    test_lower();
+    std::cout << "TEST NonDominant:" << std::endl;
+    test_nondominant();
 
     std::cout << "TEST First:" << std::endl;
     test_first();

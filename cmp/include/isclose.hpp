@@ -30,6 +30,11 @@ static_assert(eps<float>() > 0.0f);
 static_assert(eps<double>() > 0.0);
 static_assert(eps<long double>() > 0.0l);
 
+/*
+ * Selecting rigth tolerance for general case is imposible.
+ * This value was selected based on experements.
+ */
+
 template <typename real>
 inline bool isclose(real a, real b, real sigma = 10.0)
 {
