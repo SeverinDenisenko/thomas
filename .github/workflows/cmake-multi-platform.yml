@@ -55,4 +55,4 @@ jobs:
     - name: Test windows
       if: matrix.os == 'windows-latest'
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: start ${{ matrix.build_type }}\tests.exe
+      run: .\${{ matrix.build_type }}\tests.exe
