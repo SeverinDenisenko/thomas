@@ -8,8 +8,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 if (MSVC)
     # We are paranoid
-    set(UNIVERSAL_COMPILE_WARNINGS "-Wall" "-Wcast-align" "-Wcast-qual" "-Wchar-subscripts" "-Wconversion" "-Wfloat-equal" "-Wformat-nonliteral" "-Wformat-security" "-Wformat-y2k" "-Wimport" "-Winit-self" "-Winline" "-Winvalid-pch" "-Wlong-long" "-Wmissing-braces" "-Wmissing-field-initializers" "-Wmissing-format-attribute" "-Wmissing-include-dirs" "-Wmissing-noreturn" "-Wpacked" "-Wpadded" "-Wparentheses" "-Wpointer-arith" "-Wredundant-decls" "-Wreturn-type" "-Wsequence-point" "-Wshadow" "-Wsign-compare" "-Wstack-protector" "-Wswitch" "-Wswitch-default" "-Wswitch-enum" "-Wtrigraphs" "-Wuninitialized" "-Wunknown-pragmas" "-Wunreachable-code" "-Wunused" "-Wunused-function" "-Wunused-label" "-Wunused-parameter" "-Wunused-value" "-Wunused-variable" "-Wvariadic-macros" "-Wvolatile-register-var" "-Wwrite-strings")
-    set(UNIVERSAL_COMPILE_SUPPRESSIONS "-Wno-padded")
+    set(UNIVERSAL_COMPILE_WARNINGS "-Wall")
+    set(UNIVERSAL_COMPILE_SUPPRESSIONS )
     # Exceptions and rtti sucks anyway
     set(UNIVERSAL_COMPILE_FEATURES "-fno-exceptions" "-fno-rtti")
 else()
