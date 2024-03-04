@@ -11,19 +11,22 @@ set(CMAKE_CXX_STANDARD 20)
 
 if (MSVC)
     # Windows is basically garbage, so no one cares
-    set(UNIVERSAL_COMPILE_WARNINGS )
-    set(UNIVERSAL_COMPILE_SUPPRESSIONS )
-    set(UNIVERSAL_COMPILE_FEATURES )
-else()
-    # We are paranoid
-    set(UNIVERSAL_COMPILE_WARNINGS "-Wall" "-Wextra" "-Werror" "-Wcast-align" "-Wcast-qual" "-Wchar-subscripts" "-Wconversion" "-Wfloat-equal" "-Wformat-nonliteral" "-Wformat-security" "-Wformat-y2k" "-Wimport" "-Winit-self" "-Winline" "-Winvalid-pch" "-Wlong-long" "-Wmissing-braces" "-Wmissing-field-initializers" "-Wmissing-format-attribute" "-Wmissing-include-dirs" "-Wmissing-noreturn" "-Wpacked" "-Wpadded" "-Wparentheses" "-Wpointer-arith" "-Wredundant-decls" "-Wreturn-type" "-Wsequence-point" "-Wshadow" "-Wsign-compare" "-Wstack-protector" "-Wswitch" "-Wswitch-default" "-Wswitch-enum" "-Wtrigraphs" "-Wuninitialized" "-Wunknown-pragmas" "-Wunreachable-code" "-Wunused" "-Wunused-function" "-Wunused-label" "-Wunused-parameter" "-Wunused-value" "-Wunused-variable" "-Wvariadic-macros" "-Wvolatile-register-var" "-Wwrite-strings")
-    set(UNIVERSAL_COMPILE_SUPPRESSIONS "-Wno-padded")
-    # Exceptions and rtti sucks anyway
-    set(UNIVERSAL_COMPILE_FEATURES "-fno-exceptions" "-fno-rtti" "-g")
+    message(FATAL_ERROR "Windows is unsuported.")
 endif()
 
+# We are paranoid
+set(UNIVERSAL_COMPILE_WARNINGS "-Wall" "-Wextra" "-Werror" "-Wcast-align" "-Wcast-qual" "-Wchar-subscripts" "-Wconversion" "-Wfloat-equal" "-Wformat-nonliteral" "-Wformat-security" "-Wformat-y2k" "-Wimport" "-Winit-self" "-Winline" "-Winvalid-pch" "-Wlong-long" "-Wmissing-braces" "-Wmissing-field-initializers" "-Wmissing-format-attribute" "-Wmissing-include-dirs" "-Wmissing-noreturn" "-Wpacked" "-Wpadded" "-Wparentheses" "-Wpointer-arith" "-Wredundant-decls" "-Wreturn-type" "-Wsequence-point" "-Wshadow" "-Wsign-compare" "-Wstack-protector" "-Wswitch" "-Wswitch-default" "-Wswitch-enum" "-Wtrigraphs" "-Wuninitialized" "-Wunknown-pragmas" "-Wunreachable-code" "-Wunused" "-Wunused-function" "-Wunused-label" "-Wunused-parameter" "-Wunused-value" "-Wunused-variable" "-Wvariadic-macros" "-Wvolatile-register-var" "-Wwrite-strings")
+set(UNIVERSAL_COMPILE_SUPPRESSIONS "-Wno-padded")
+# Exceptions and rtti sucks anyway
+set(UNIVERSAL_COMPILE_FEATURES "-fno-exceptions" "-fno-rtti" "-g")
+
 set(UNIVERSAL_COMPILE_OPTIONS ${UNIVERSAL_COMPILE_WARNINGS} ${UNIVERSAL_COMPILE_FEATURES} ${UNIVERSAL_COMPILE_SUPPRESSIONS})
-set(UNIVERSAL_LINKER_OPTIONS "-flto" "-fuse-ld=gold" "-g")
+
+if(APPLE)
+    set(UNIVERSAL_LINKER_OPTIONS "-flto" "-fuse-ld=gold" "-g")
+else()
+    set(UNIVERSAL_LINKER_OPTIONS "-flto" "-g")
+endif()
 
 if(ENABLE_ASAN)
     set(UNIVERSAL_COMPILE_OPTIONS ${UNIVERSAL_COMPILE_OPTIONS} "-fsanitize=address")
