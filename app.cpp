@@ -10,6 +10,31 @@ using cmp::tridiagonal_matrix_solver;
 
 using real = double;
 
+bool read(std::istream& stream, real& result)
+{
+    if (stream >> result) {
+        return true;
+    } else {
+        // Reasonable error handling
+
+        if (stream.eof()) {
+            std::cerr << "Expected real number. Got EOF." << std::endl;
+        } else {
+            std::string input;
+            stream >> input;
+            std::cerr << "Expected real number. Got: " << input << std::endl;
+        }
+
+        return false;
+    }
+}
+
+bool write(std::ostream& stream, real& value)
+{
+    stream << std::setprecision(3) << std::fixed << std::setw(11) << value;
+    return true;
+}
+
 int main()
 {
     std::ifstream input("input.dat");
@@ -32,34 +57,17 @@ int main()
     array<real> c(n);
     array<real> x(n);
 
-    // Error handling may be done, but we will pretend that we don't care.
     for (size_t i = 1; i < n; ++i) {
-        if (input.peek() == EOF) {
-            std::cerr << "Bad input file." << std::endl;
-            return 1;
-        }
-        input >> a[i];
+        read(input, a[i]);
     }
     for (size_t i = 0; i < n; ++i) {
-        if (input.peek() == EOF) {
-            std::cerr << "Bad input file." << std::endl;
-            return 1;
-        }
-        input >> b[i];
+        read(input, b[i]);
     }
     for (size_t i = 0; i < n - 1; ++i) {
-        if (input.peek() == EOF) {
-            std::cerr << "Bad input file." << std::endl;
-            return 1;
-        }
-        input >> c[i];
+        read(input, c[i]);
     }
     for (size_t i = 0; i < n; ++i) {
-        if (input.peek() == EOF) {
-            std::cerr << "Bad input file." << std::endl;
-            return 1;
-        }
-        input >> x[i];
+        read(input, x[i]);
     }
 
     input.close();
@@ -78,10 +86,11 @@ int main()
 
     output << n << "\n";
     for (size_t i = 0; i < n; ++i) {
-        output << std::setprecision(3) << std::fixed << std::setw(11) << x[i];
-        std::cout << std::setprecision(3) << std::fixed << std::setw(11) << x[i];
+        write(output, x[i]);
+        write(std::cout, x[i]);
     }
     output << "\n";
+    std::cout << "\n";
 
     output.close();
 
