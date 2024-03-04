@@ -23,9 +23,9 @@ set(UNIVERSAL_COMPILE_FEATURES "-fno-exceptions" "-fno-rtti" "-g")
 set(UNIVERSAL_COMPILE_OPTIONS ${UNIVERSAL_COMPILE_WARNINGS} ${UNIVERSAL_COMPILE_FEATURES} ${UNIVERSAL_COMPILE_SUPPRESSIONS})
 
 if(APPLE)
-    set(UNIVERSAL_LINKER_OPTIONS "-flto" "-fuse-ld=gold" "-g")
-else()
     set(UNIVERSAL_LINKER_OPTIONS "-flto" "-g")
+else()
+    set(UNIVERSAL_LINKER_OPTIONS "-flto" "-fuse-ld=gold" "-g")
 endif()
 
 if(ENABLE_ASAN)
